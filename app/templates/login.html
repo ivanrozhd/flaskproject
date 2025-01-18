@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block head %} <!-- Title should be inside head block -->
+    <title>Login Page</title>
+{% endblock %}
+
+
+{% block body %}
+<h1>Login</h1>
+        <form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.email.label }} {{ form.email() }}
+    {{ form.password.label }} {{ form.password() }}
+    {{ form.submit() }}
+</form>
+{% endblock %}

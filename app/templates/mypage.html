@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block head %} <!-- Title should be inside head block -->
+    <title>Login Page</title>
+{% endblock %}
+
+
+{% block body %}
+<h1>MyPage</h1>
+     <h1>Welcome, {{ user.username }}!</h1>
+    <p>Your email: {{ user.email }}</p>
+   <h3>Interests</h3>
+
+   <ul>
+    {% for interest in interests %}
+        <li>{{ interest.hobby }} - {{ interest.description }}</li>
+    {% endfor %}
+</ul>
+
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <h3> add new interests!!</h3>
+            {{ form.hobby(class="form-control", placeholder="Enter an interest") }}
+            {{ form.description(class="form-control", placeholder="Enter a description") }}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ form.submit.label }}</button>
+    </form>
+</div>
+
+
+
+      <a href="/logout">Logout</a><br>
+
+{% endblock %}
+
