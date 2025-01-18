@@ -9,10 +9,20 @@ main = Blueprint('main', __name__)
 
 @main.route("/")
 def home():
+    """
+    Home page
+    :return:
+    """
+
     return render_template('home.html')
 
 @main.route("/register", methods=["POST","GET"])
 def register():
+
+    """
+    Registers the user
+    :return:
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationForm()
@@ -30,6 +40,12 @@ def register():
 
 @main.route("/login", methods=["POST","GET"])
 def login():
+
+    """
+    Logs in the user
+    :return:
+    """
+
     if current_user.is_authenticated:
         return redirect(url_for('main.mypage', username=current_user.username))
     form = LoginForm()
@@ -48,6 +64,12 @@ def login():
 @main.route("/mypage/<username>", methods=["POST","GET"])
 @login_required
 def mypage(username):
+
+    """
+    :param username: current user
+    :return:
+    """
+
     user = User.query.filter_by(username=username).first_or_404()
     form = InterestForm()
     if form.validate_on_submit():
@@ -64,12 +86,69 @@ def mypage(username):
     print(f"Raw Query Result: {Interests.query.filter_by(user_id=user.id).all()}")
 
     return render_template('mypage.html', user=user, form=form, interests=interests)
-    #return render_template('mypage.html', user=user, form=form)
+
+@main.route("/mypage/<username>/delete/<int:id>")
+def delete(username, id):
+    """
+    :param username: current user
+    :param id: id of the interest to be deleted
+    :return: redirect to mypage
+
+    """
+
+    if current_user.username != username:
+        flash("You are not authorized to delete this interest.", "danger")
+        return redirect(url_for('main.mypage', username=current_user.username))
+
+    interest = Interests.query.get_or_404(id)
+    if interest.user_id != current_user.id:
+        flash("You are not authorized to delete this interest.", "danger")
+        return redirect(url_for('main.mypage', username=current_user.username))
+
+    db.session.delete(interest)
+    db.session.commit()
+    flash('Interest deleted successfully!', 'success')
+
+    return redirect(url_for('main.mypage', username=username))
+
+
+@main.route("/mypage/<username>/update/<int:id>", methods=["POST"])
+@login_required
+def update_interest(username, id):
+    # Ensure the interest belongs to the current user
+    interest = Interests.query.get_or_404(id)
+    if interest.user_id != current_user.id:
+        flash("You are not authorized to update this interest.", "danger")
+        return redirect(url_for('main.mypage', username=username))
+
+    # Get data from the form
+    new_hobby = request.form.get('hobby')
+    new_description = request.form.get('description')
+
+    # Update the interest
+    if new_hobby:
+        interest.hobby = new_hobby
+    if new_description:
+        interest.description = new_description
+
+    # Save changes
+    db.session.commit()
+    flash("Interest updated successfully!", "success")
+
+    # Redirect back to the user's mypage
+    return redirect(url_for('main.mypage', username=username))
+
+
 
 
 
 @main.route("/logout")
 def logout():
+
+    """
+    Logs out the current user
+    :return: redirect to home page
+    """
     logout_user()
     return redirect(url_for('main.home'))
 
