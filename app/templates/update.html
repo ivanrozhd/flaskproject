@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+
+{% block head %} <!-- Title should be inside head block -->
+    <title>Update Page</title>
+{% endblock %}
+
+{% block body %}
+   <div class="update-page">
+        <h3>Update Interest</h3>
+        <form action="{{ url_for('main.update_interest', username=current_user.username, id=interest.id) }}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="hobby">Hobby</label>
+                <input type="text" id="hobby" name="hobby" value="{{ interest.hobby }}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control">{{ interest.description }}</textarea>
+            </div>
+
+             <button type="submit" class="btn btn-primary">Update Interest</button>
+
+              <a href="{{ url_for('main.mypage', username=current_user.username) }}" class="btn btn-secondary">
+                Go Back!
+            </a>
+
+        </form>
+    </div>
+{% endblock %}

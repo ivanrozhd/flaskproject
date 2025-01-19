@@ -19,19 +19,12 @@
             <div class="display-mode" id="display-{{ interest.id }}">
                 <span class="hobby">{{ interest.hobby }}</span> -
                 <span class="description">{{ interest.description }}</span>
-                <button class="edit-btn" data-id="{{ interest.id }}">Edit</button>
                 <a href="{{ url_for('main.delete',username=user.username, id=interest.id) }}" onclick="return confirm('Are you sure you want to delete this interest?');">Delete</a>
             </div>
+          <a href="{{ url_for('main.update_interest', username=user.username, id=interest.id) }}" id="edit-{{ interest.id }}">
+                <button class="edit-btn" data-id="{{ interest.id }}">Edit</button>
+          </a>
 
-            <!-- Edit Mode -->
-            <div class="edit-mode" id="edit-{{ interest.id }}" style="display: none;">
-                <form action="{{ url_for('main.update_interest', username=user.username, id=interest.id) }}" method="POST">
-                    <input type="text" name="hobby" value="{{ interest.hobby }}" />
-                    <input type="text" name="description" value="{{ interest.description }}" />
-                    <button type="submit">Update</button>
-                    <button type="button" class="cancel-btn" data-id="{{ interest.id }}">Cancel</button>
-                </form>
-            </div>
         </li>
 
     {% endfor %}
@@ -49,7 +42,7 @@
     </form>
 </div>
 
-
+     <a href="{{ url_for('main.delete_all',username=user.username) }}" onclick="return confirm('Are you sure you want to delete this account?');">Delete Account</a>
 
       <a href="/logout">Logout</a><br>
 

@@ -7,10 +7,23 @@
 
 {% block body %}
 <h1>Login</h1>
+
+
         <form method="POST">
     {{ form.hidden_tag() }}
     {{ form.email.label }} {{ form.email() }}
     {{ form.password.label }} {{ form.password() }}
     {{ form.submit() }}
 </form>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% set category, message = messages[-1] %}  <!-- Get the last flashed message -->
+        {% if category == 'danger' %}
+                <li class="alert alert-danger">{{ message }}</li>
+            {% endif %}
+    {% endif %}
+{% endwith %}
+
 {% endblock %}
